@@ -7,8 +7,8 @@ function App() {
   const {register,handleSubmit,errors} = useForm();
 
   const onSubmitHandler =(data)=>{
+     
      axios.post("https://userdata-4e250.firebaseio.com/data.json",data).then(res=>{
-       onclose();
        return alert("Saved successfully");
      }).catch(e=>console.log(e.message));
   }
