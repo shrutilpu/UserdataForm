@@ -35,7 +35,7 @@ function Form() {
              setEmail(res.data.Email);
              setDesc(res.data.Description);
              return console.log(res.data.Name);
-         }).catch(e=>alert(e.message))
+         }).catch(e=>alert(e.message));
   }
   return (
     <div className="App">
@@ -72,7 +72,7 @@ function Form() {
          <button type="reset">Cancel</button>
        <button type="submit">Save</button>
        </div>
-       <button onClick={EditDataHandler}>Edit</button>
+       <button type="button" onClick={EditDataHandler}>Edit</button>
      </form>
     </div>
   );
