@@ -10,7 +10,7 @@ function List({editHnadler}) {
             const result =Object.entries(res.data);
           return setListItem(result.map(items=>{return {id:items[0],value:items[1]}}));
         })}
-      })
+      },[listItem.length])
     return (
         <div className="List">
             {listItem.length!==0?listItem.map(item=><ListData key={item.id} id={item.id} 

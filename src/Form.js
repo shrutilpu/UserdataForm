@@ -2,8 +2,8 @@ import React,{useState,useEffect} from 'react';
 import './App.css';
 import {useForm} from 'react-hook-form';
 import axios from 'axios';
-
-function Form(props) {
+import List from './List'
+function Form() {
   const {register,handleSubmit,errors} = useForm();
 
   const [name,setName] = useState();
@@ -12,25 +12,18 @@ function Form(props) {
   const [gender,setGenader] = useState();
   const [desc,setDesc] = useState();
   const [skill,setSkill] = useState();
-
-  useEffect(() => {
-    
-    setName(props.name);
-    setEmail(props.Email);
-    setPhone(props.phone);
-    setGenader(props.gender);
-    setSkill(props.skills);
-    setDesc(props.desc);
-    return () => {
-      console.log(name);
-    }
-  },[props.id] );
+  const [role,setRole] = useState();
+  const [id,setId]=useState();
+useEffect(() => {
+  
+  setRole(localStorage.getItem("role"));
+},[])  
 
   const onSubmitHandler =(data)=>{  
     setName(""); setPhone(""); setGenader(""); setEmail(""); setDesc(""); setSkill("");
-    if(props.id)
+    if(id)
     {
-      axios.put(`https://userdata-4e250.firebaseio.com/data/${props.id}.json`,data).then(res=>{
+      axios.put(`https://userdata-4e250.firebaseio.com/data/${id}.json`,data).then(res=>{
         return alert("edited successfully");
       }).catch(e=>console.log(e.message));
    }
@@ -39,7 +32,20 @@ function Form(props) {
         return alert("Saved successfully");
       }).catch(e=>console.log(e.message));
     } 
-  }  
+  } 
+  const EditDataHandler =(id)=>{
+    axios.get(`https://userdata-4e250.firebaseio.com/data/${id}.json`).then(res=>{
+    setId(id);
+    setName(res.data.Name);
+    setEmail(res.data.Email);
+    setPhone(res.data.phone);
+    setGenader(res.data.gender);
+    setSkill(res.data.skills);
+    setDesc(res.data.Description);
+        return console.log(name);
+    }).catch(e=>alert(e.message));
+} 
+
   return (
     <div className="App">
      
@@ -75,6 +81,8 @@ function Form(props) {
        <button type="submit">Save</button>
        </div>
      </form>
+
+     {role?<List editHnadler={EditDataHandler}/>:null}
     </div>
   );
 }
