@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import './App.css';
 import {useForm} from 'react-hook-form';
 import axios from 'axios';
 
-function Form() {
+function Form(props) {
   const {register,handleSubmit,errors} = useForm();
 
   const [name,setName] = useState();
@@ -13,30 +13,33 @@ function Form() {
   const [desc,setDesc] = useState();
   const [skill,setSkill] = useState();
 
-  
-  const onSubmitHandler =(data)=>{
-     
-    setName("");
-    setPhone("");
-    setGenader("");
-    setEmail("");
-    setDesc("");
-    setSkill("");
-     axios.put("https://userdata-4e250.firebaseio.com/data/-MIyVEb1RGR0huahnEtB.json",data).then(res=>{
-       return alert("Saved successfully");
-     }).catch(e=>console.log(e.message));
-  }
-  const EditDataHandler =()=>{
-         axios.get("https://userdata-4e250.firebaseio.com/data/-MIyVEb1RGR0huahnEtB.json").then(res=>{
-             setPhone(res.data.phone);
-             setSkill(res.data.skills);
-             setName(res.data.Name);
-             setGenader(res.data.gender);
-             setEmail(res.data.Email);
-             setDesc(res.data.Description);
-             return console.log(res.data.Name);
-         }).catch(e=>alert(e.message));
-  }
+  useEffect(() => {
+    
+    setName(props.name);
+    setEmail(props.Email);
+    setPhone(props.phone);
+    setGenader(props.gender);
+    setSkill(props.skills);
+    setDesc(props.desc);
+    return () => {
+      console.log(name);
+    }
+  },[props.id] );
+
+  const onSubmitHandler =(data)=>{  
+    setName(""); setPhone(""); setGenader(""); setEmail(""); setDesc(""); setSkill("");
+    if(props.id)
+    {
+      axios.put(`https://userdata-4e250.firebaseio.com/data/${props.id}.json`,data).then(res=>{
+        return alert("edited successfully");
+      }).catch(e=>console.log(e.message));
+   }
+    else{
+      axios.post(`https://userdata-4e250.firebaseio.com/data.json`,data).then(res=>{
+        return alert("Saved successfully");
+      }).catch(e=>console.log(e.message));
+    } 
+  }  
   return (
     <div className="App">
      
@@ -69,10 +72,8 @@ function Form() {
      </div>
        <textarea name="Description" placeholder="Description" className="Text" ref={register} value={desc} onChange={e=>setDesc(e.target.value)}/>
        <div className="btn">
-         <button type="reset">Cancel</button>
        <button type="submit">Save</button>
        </div>
-       <button type="button" onClick={EditDataHandler}>Edit</button>
      </form>
     </div>
   );
